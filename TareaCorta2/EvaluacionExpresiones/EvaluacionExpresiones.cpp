@@ -54,6 +54,24 @@ ArbolBinario* EvaluacionExpresiones::CrearArbolExpresion(ListaSimple* ListaInfij
                 PilaOps->AgregarNodo(Nodo);
                 return;
             }
+            if (dynamic_cast<NodoOperador*>(Nodo)->Operador == ETipoOperador::ParentesisCierra)
+            {
+                while(true)
+                {
+                    //Flush
+                }
+                return;
+            }
+            else
+            {
+                if (CompararNodos(dynamic_cast<NodoOperador*>(dynamic_cast<NodoOperador*>(Nodo)),dynamic_cast<NodoOperador*>(PilaOps->Pop())))
+                {
+                    //Crear arbol
+                }else
+                {
+                    //Insertar a pila
+                }
+            }
         }
     });
 }
