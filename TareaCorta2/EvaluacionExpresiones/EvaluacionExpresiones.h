@@ -13,4 +13,5 @@ public:
     static bool CompararNodos(NodoOperador* PFP, NodoOperador* PDP);
     static ArbolBinario* CrearArbolExpresion(ListaSimple* ListaInfijo);
     static void EvaluarArbolExpresion(ArbolBinario* Arbol);
+    void GuardarExpresionesYEvaluciones(ArbolBinario* arbol, const std::string& nombreArchivo);
 };

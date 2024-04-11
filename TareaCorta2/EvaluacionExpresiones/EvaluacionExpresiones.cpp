@@ -124,3 +124,31 @@ void EvaluacionExpresiones::EvaluarArbolExpresion(ArbolBinario* Arbol)
 {
     std::cout<<Arbol->Raiz->EvaluarArbol()<<std::endl;;
 }
+void EvaluacionExpresiones::GuardarExpresionesYEvaluciones(ArbolBinario* arbol, const std::string& nombreArchivo) {
+    // Abrir el archivo de salida en modo escritura
+    std::ofstream archivo(nombreArchivo);
+    if (!archivo.is_open()) {
+        std::cerr << "Error al abrir el archivo de salida." << std::endl;
+        return;
+    }
+
+    // Escribir las expresiones y evaluaciones en el archivo
+    archivo << "Expresión Infijo: ";
+    arbol->RecorrerInfijo(arbol->Raiz, archivo);
+    archivo << std::endl;
+
+    archivo << "Expresión Prefijo: ";
+    arbol->RecorrerPrefijo(arbol->Raiz, archivo);
+    archivo << std::endl;
+
+    archivo << "Expresión Postfijo: ";
+    arbol->RecorrerPostfijo(arbol->Raiz, archivo);
+    archivo << std::endl;
+
+    //archivo << "Evaluación de la Expresión: ";
+    //float resultado = arbol->EvaluarArbol();
+    //archivo << resultado << std::endl;
+
+    // Cerrar el archivo
+    archivo.close();
+}
