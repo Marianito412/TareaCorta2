@@ -14,22 +14,14 @@ int main()
     EvaluacionExpresiones::CargarArchivo(ColaArchivos, "Arch5.txt");
     for (int i = 0; i<5;i++)
     {
-        cout<<"_________________________"<<endl;
-        ArbolBinario* Arbol = EvaluacionExpresiones::CrearArbolExpresion(ColaArchivos.GetElemento(i));
-        cout<<endl;
-        cout<<"Prefijo: ";
-        Arbol->RecorrerPrefijo(Arbol->Raiz);
-        cout<<endl;
+       ArbolBinario* Arbol = EvaluacionExpresiones::CrearArbolExpresion(ColaArchivos.GetElemento(i));
         
-        cout<<"Infijo: ";
-        Arbol->RecorrerInfijo(Arbol->Raiz);
-        cout<<endl;
-        
-        cout<<"Postfijo: ";
-        Arbol->RecorrerPostfijo(Arbol->Raiz);
-        cout<<endl;
-        EvaluacionExpresiones::EvaluarArbolExpresion(Arbol);    
+        // Generar el nombre del archivo para cada expresión y evaluación
+        std::string nombreArchivo = "Expresion" + std::to_string(i + 1) + ".txt";
+
+        // Llamar a la función para guardar las expresiones y evaluaciones en el archivo correspondiente
+        EvaluacionExpresiones::GuardarExpresionesYEvaluciones(Arbol, nombreArchivo);
     }
-    
+
     return 0;
 }

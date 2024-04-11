@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "../ListaSimple/ListaSimple.h"
-
+#include "../Nodos/NodoOperador.h"
 class ColaEstatica
 {
     static const int TAMANO = 5;
@@ -20,4 +20,6 @@ public:
     ListaSimple* GetElemento(int Pos);
 
     void Mostrar();
+
+    void CompararPrioridadOperador(const std::string& nombreArchivo, NodoOperador* nuevoOperador);
 };

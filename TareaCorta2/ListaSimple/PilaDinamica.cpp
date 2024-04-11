@@ -1,5 +1,5 @@
 ﻿#include "PilaDinamica.h"
-
+#include <fstream>
 #include <iostream>
 
 void PilaDinamica::AgregarNodo(NodoBase* Nodo)
