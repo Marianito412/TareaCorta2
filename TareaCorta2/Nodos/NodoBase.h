@@ -16,4 +16,5 @@ public:
     NodoBase* Derecha = nullptr;
 
     virtual void Mostrar();
+    virtual float EvaluarArbol();
 };

@@ -6,7 +6,7 @@
 
 #include "../ListaSimple/PilaDinamica.h"
 
-std::string DIRECTORIO = "../Archivos";
+std::string DIRECTORIO = "../Archivos/";
 
 void EvaluacionExpresiones::CargarArchivo(ColaEstatica& ColaArchivos, std::string NombreArchivo)
 {
@@ -17,6 +17,7 @@ void EvaluacionExpresiones::CargarArchivo(ColaEstatica& ColaArchivos, std::strin
     Archivo.open(Directorio);
     for (std::string Linea; getline(Archivo, Linea); ) 
     {
+        //std::cout<<Linea<<std::endl;
         //Dios perdonalos, porque no saben lo que hacen
         bool EsOperador = Linea=="+" || Linea=="-" || Linea=="*" || Linea=="/" || Linea=="^" || Linea=="(" || Linea==")";
         
@@ -33,7 +34,7 @@ void EvaluacionExpresiones::CargarArchivo(ColaEstatica& ColaArchivos, std::strin
 
 bool EvaluacionExpresiones::CompararNodos(NodoOperador* PFP, NodoOperador* PDP)
 {
-    return PFP->GetPrioridad(true)> PDP->GetPrioridad(false);
+    return PFP->GetPrioridad(false) > PDP->GetPrioridad(true);
 }
 
 ArbolBinario* EvaluacionExpresiones::CrearArbolExpresion(ListaSimple* ListaInfijo)
@@ -41,37 +42,85 @@ ArbolBinario* EvaluacionExpresiones::CrearArbolExpresion(ListaSimple* ListaInfij
     ArbolBinario* ArbolExpresion = new ArbolBinario();
     PilaDinamica* PilaOps = new PilaDinamica();
     PilaDinamica* PilaNums = new PilaDinamica();
-    ListaInfijo->IterarNodos([&PilaNums, &PilaOps, &ArbolExpresion](NodoBase* Nodo)
+    NodoBase* NodoInfijo = ListaInfijo->Primero;
+    while (NodoInfijo)
     {
-        if (Nodo->TipoNodo == ETipoNodo::Numero)
+        NodoBase* Nodo = nullptr;
+        if (NodoInfijo->TipoNodo == ETipoNodo::Numero)
         {
-            PilaNums->AgregarNodo(Nodo);
+            Nodo = new NodoNumero(dynamic_cast<NodoNumero*>(NodoInfijo)->Valor);
         }
         else
         {
-            if (PilaOps->ListaVacia())
+            Nodo = new NodoOperador(dynamic_cast<NodoOperador*>(NodoInfijo)->Operador);
+        }
+        Nodo->Mostrar();
+        if (Nodo->TipoNodo == ETipoNodo::Numero)
+        {
+            PilaNums->AgregarNodo(Nodo);
+            NodoInfijo = NodoInfijo->Siguiente;
+            continue;
+        }
+        if (PilaOps->ListaVacia() && dynamic_cast<NodoOperador*>(Nodo)->Operador != ETipoOperador::ParentesisCierra)
+        {
+            PilaOps->AgregarNodo(Nodo);
+            NodoInfijo = NodoInfijo->Siguiente;
+            continue;
+        }
+        if (dynamic_cast<NodoOperador*>(Nodo)->Operador == ETipoOperador::ParentesisCierra)
+        {
+            //Flush
+            while (!PilaOps->ListaVacia() && dynamic_cast<NodoOperador*>(PilaOps->Tope)->Operador !=
+                ETipoOperador::ParentesisAbre)
             {
-                PilaOps->AgregarNodo(Nodo);
-                return;
+                NodoBase* NodoFlush = PilaOps->Pop();
+                NodoFlush->Derecha = PilaNums->Pop();
+                NodoFlush->Izquierda = PilaNums->Pop();
+                PilaNums->AgregarNodo(NodoFlush);
             }
-            if (dynamic_cast<NodoOperador*>(Nodo)->Operador == ETipoOperador::ParentesisCierra)
+            if (!PilaOps->ListaVacia())
             {
-                while(true)
-                {
-                    //Flush
-                }
-                return;
+                PilaOps->Pop();
+            }
+        }
+        else
+        {
+            if (dynamic_cast<NodoOperador*>(Nodo)->GetPrioridad(false) > dynamic_cast<NodoOperador*>(PilaOps->Tope)->
+                GetPrioridad(true))
+            {
+                //Insertar a pila
+                PilaOps->AgregarNodo(Nodo);
             }
             else
             {
-                if (CompararNodos(dynamic_cast<NodoOperador*>(dynamic_cast<NodoOperador*>(Nodo)),dynamic_cast<NodoOperador*>(PilaOps->Pop())))
-                {
-                    //Crear arbol
-                }else
-                {
-                    //Insertar a pila
-                }
+                //Crear arbol
+                NodoBase* NodoNuevo = PilaOps->Pop();
+                PilaOps->AgregarNodo(Nodo);
+                NodoNuevo->Derecha = PilaNums->Pop();
+                NodoNuevo->Izquierda = PilaNums->Pop();
+                PilaNums->AgregarNodo(NodoNuevo);
             }
         }
-    });
+        NodoInfijo = NodoInfijo->Siguiente;
+    }
+    /*
+    std::cout<<"PilaNums"<<std::endl;
+    PilaNums->Mostrar();
+    std::cout<<"PilaOps"<<std::endl;
+    PilaOps->Mostrar();
+    */
+    if (!PilaOps->ListaVacia())
+    {
+        NodoBase* Ultimo = PilaOps->Pop();
+        Ultimo->Derecha = PilaNums->Pop();
+        Ultimo->Izquierda = PilaNums->Pop();
+        PilaNums->AgregarNodo(Ultimo);
+    }
+    ArbolExpresion->Raiz = PilaNums->Pop();
+    return ArbolExpresion;
+}
+
+void EvaluacionExpresiones::EvaluarArbolExpresion(ArbolBinario* Arbol)
+{
+    std::cout<<Arbol->Raiz->EvaluarArbol()<<std::endl;;
 }

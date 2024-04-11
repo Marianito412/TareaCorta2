@@ -12,5 +12,6 @@ public:
         TipoNodo = ETipoNodo::Numero;
     }
 
+    float EvaluarArbol() override;
     void Mostrar() override;
 };

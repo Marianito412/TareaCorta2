@@ -32,3 +32,36 @@ void ArbolBinario::Insertar(NodoBase* Nodo, bool EsIzquierda)
         Raiz->Derecha = Nodo;
     }
 }
+
+void ArbolBinario::RecorrerPrefijo(NodoBase* Nodo)
+{
+    if (!Nodo)
+    {
+        return;
+    }
+    Nodo->Mostrar();
+    RecorrerPrefijo(Nodo->Izquierda);
+    RecorrerPrefijo(Nodo->Derecha);
+}
+
+void ArbolBinario::RecorrerInfijo(NodoBase* Nodo)
+{
+    if (!Nodo)
+    {
+        return;
+    }
+    RecorrerInfijo(Nodo->Izquierda);
+    Nodo->Mostrar();
+    RecorrerInfijo(Nodo->Derecha);
+}
+
+void ArbolBinario::RecorrerPostfijo(NodoBase* Nodo)
+{
+    if (!Nodo)
+    {
+        return;
+    }
+    RecorrerPostfijo(Nodo->Izquierda);
+    RecorrerPostfijo(Nodo->Derecha);
+    Nodo->Mostrar();
+}

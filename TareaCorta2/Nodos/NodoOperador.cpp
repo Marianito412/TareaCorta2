@@ -30,6 +30,23 @@ float NodoOperador::Evaluar(float Num1, float Num2)
     }
 }
 
+float NodoOperador::EvaluarArbol()
+{
+    switch (Operador)
+    {
+    case ETipoOperador::Suma:
+        return Izquierda->EvaluarArbol() + Derecha->EvaluarArbol();
+    case ETipoOperador::Resta:
+        return Izquierda->EvaluarArbol() - Derecha->EvaluarArbol();
+    case ETipoOperador::Multiplicacion:
+        return Izquierda->EvaluarArbol() * Derecha->EvaluarArbol();
+    case ETipoOperador::Division:
+        return Izquierda->EvaluarArbol() / Derecha->EvaluarArbol();
+    case ETipoOperador::Potencia:
+        return std::pow(Izquierda->EvaluarArbol(), Derecha->EvaluarArbol());
+    }
+}
+
 int NodoOperador::GetPrioridad(bool EnPila)
 {
     switch (Operador)

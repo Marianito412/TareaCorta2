@@ -35,6 +35,8 @@ public:
     
     virtual float Evaluar(float Num1, float Num2);
 
+    float EvaluarArbol() override;
+
     int GetPrioridad(bool EnPila);
 
     void Mostrar() override;
