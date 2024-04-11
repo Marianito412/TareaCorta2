@@ -11,6 +11,7 @@ public:
     static void CargarArchivo(ColaEstatica& ColaArchivos, std::string NombreArchivo);
 
     static bool CompararNodos(NodoOperador* PFP, NodoOperador* PDP);
-    static ArbolBinario* CrearArbolExpresion(ListaSimple* ListaInfijo);
+    static ArbolBinario* CrearArbolExpresion(ListaSimple* ListaInfijo, int i);
+    static std::string MostrarPrioridad(NodoOperador* Operador, bool EnPila);
     static void EvaluarArbolExpresion(ArbolBinario* Arbol);
 };

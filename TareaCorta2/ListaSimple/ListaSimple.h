@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <functional>
+#include <string>
 
 #include "../Nodos/NodoBase.h"
 
@@ -12,4 +13,6 @@ public:
     void IterarNodos(std::function<void(NodoBase*)> func);
 
     void Mostrar();
+
+    std::string ConseguirString();
 };

@@ -15,7 +15,7 @@ int main()
     for (int i = 0; i<5;i++)
     {
         cout<<"_________________________"<<endl;
-        ArbolBinario* Arbol = EvaluacionExpresiones::CrearArbolExpresion(ColaArchivos.GetElemento(i));
+        ArbolBinario* Arbol = EvaluacionExpresiones::CrearArbolExpresion(ColaArchivos.GetElemento(i), i);
         cout<<endl;
         cout<<"Prefijo: ";
         Arbol->RecorrerPrefijo(Arbol->Raiz);

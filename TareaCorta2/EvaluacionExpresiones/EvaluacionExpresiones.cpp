@@ -3,6 +3,7 @@
 #include "../Nodos/NodoOperador.h"
 #include "../Nodos/NodoNumero.h"
 #include <fstream>
+#include <iostream>
 
 #include "../ListaSimple/PilaDinamica.h"
 
@@ -37,12 +38,17 @@ bool EvaluacionExpresiones::CompararNodos(NodoOperador* PFP, NodoOperador* PDP)
     return PFP->GetPrioridad(false) > PDP->GetPrioridad(true);
 }
 
-ArbolBinario* EvaluacionExpresiones::CrearArbolExpresion(ListaSimple* ListaInfijo)
+ArbolBinario* EvaluacionExpresiones::CrearArbolExpresion(ListaSimple* ListaInfijo, int i)
 {
     ArbolBinario* ArbolExpresion = new ArbolBinario();
     PilaDinamica* PilaOps = new PilaDinamica();
     PilaDinamica* PilaNums = new PilaDinamica();
     NodoBase* NodoInfijo = ListaInfijo->Primero;
+    std::ofstream ArchivoPila;
+    ArchivoPila.open(DIRECTORIO+"ArchivoPila"+std::to_string(i)+".txt");
+    
+    std::ofstream ArchivoComparaciones;
+    ArchivoComparaciones.open(DIRECTORIO+"ArchivoComparaciones"+std::to_string(i)+".txt");
     while (NodoInfijo)
     {
         NodoBase* Nodo = nullptr;
@@ -85,6 +91,8 @@ ArbolBinario* EvaluacionExpresiones::CrearArbolExpresion(ListaSimple* ListaInfij
         }
         else
         {
+            ArchivoComparaciones<<MostrarPrioridad(dynamic_cast<NodoOperador*>(Nodo), false) + " - " +MostrarPrioridad(dynamic_cast<NodoOperador*>(PilaOps->Tope), true)+"\n";
+            ArchivoPila<<PilaNums->ConseguirString()+"\n";
             if (dynamic_cast<NodoOperador*>(Nodo)->GetPrioridad(false) > dynamic_cast<NodoOperador*>(PilaOps->Tope)->
                 GetPrioridad(true))
             {
@@ -118,6 +126,36 @@ ArbolBinario* EvaluacionExpresiones::CrearArbolExpresion(ListaSimple* ListaInfij
     }
     ArbolExpresion->Raiz = PilaNums->Pop();
     return ArbolExpresion;
+}
+
+std::string EvaluacionExpresiones::MostrarPrioridad(NodoOperador* Operador, bool EnPila)
+{
+    std::string StrOp;
+    switch (Operador->Operador)
+    {
+    case ETipoOperador::Suma:
+        StrOp = "+";
+        break;
+    case ETipoOperador::Resta:
+        StrOp = "-";
+        break;
+    case ETipoOperador::Multiplicacion:
+        StrOp = "*";
+        break;
+    case ETipoOperador::Division:
+        StrOp = "/";
+        break;
+    case ETipoOperador::Potencia:
+        StrOp = "^";
+        break;
+    case ETipoOperador::ParentesisAbre:
+        StrOp = "(";
+        break;
+    case ETipoOperador::ParentesisCierra:
+        StrOp = ")";
+        break;
+    }
+    return StrOp+std::to_string(Operador->GetPrioridad(EnPila));
 }
 
 void EvaluacionExpresiones::EvaluarArbolExpresion(ArbolBinario* Arbol)
